@@ -1,2 +1,9 @@
-# uicab-mail
-:e-mail:   'uicab'.split('').reverse().map(i => i.replace('u', ' u')).join('')
+
+
+![](C:/Pigelbow/uicab-mail/app/public/favicon.png)
+
+
+
+Baci U .
+
+A mail system designed as a graduation project .
