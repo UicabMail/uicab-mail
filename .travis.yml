@@ -5,5 +5,5 @@ branchs:
   only:
   - master
 before_install:
-- openssl aes-256-cbc -K $encrypted_2b738f15870d_key -iv $encrypted_2b738f15870d_iv
-  -in id_rsa.enc -out id_rsa -d
+- openssl aes-256-cbc -K $encrypted_e88bd3b6fb56_key -iv $encrypted_e88bd3b6fb56_iv
+  -in id_rsa.enc -out ./id_rsa -d
