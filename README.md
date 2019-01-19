@@ -1,6 +1,7 @@
 
+[![Build Status](https://travis-ci.org/UicabMail/uicab-mail.svg?branch=master)](https://travis-ci.org/UicabMail/uicab-mail)
 
-![](C:/Pigelbow/uicab-mail/app/public/favicon.png)
+![](./app/public/favicon.png)
 
 
 
