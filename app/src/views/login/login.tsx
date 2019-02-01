@@ -1,8 +1,10 @@
-import React, { Component } from "react";
-import { observer } from "mobx-react";
-import styled from "styled-components";
-import login from "../../assets/login.jpg";
 import { Form as _Form, Input, Checkbox, Button } from "antd";
+import { observer, inject } from "mobx-react";
+import React, { Component } from "react";
+import { RouteComponentProps } from "react-router-dom";
+import styled from "styled-components";
+
+import login from "../../assets/login.jpg";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -66,6 +68,7 @@ const FormWrapper = styled.div`
   border-radius: 4px;
   box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.1);
   transform: translateY(-50%);
+  z-index: 1;
 `;
 
 const Title = styled.h3`
@@ -95,14 +98,24 @@ const Footer = styled.div`
   align-items: center;
 `;
 
+interface LoginProps extends RouteComponentProps {
+  login: any;
+}
+
+@inject("login")
 @observer
-export class Login extends Component {
+export class Login extends Component<LoginProps> {
+  componentDidMount() {
+    this.props.login.setL();
+    console.log(this.props);
+  }
+
   render() {
     return (
       <Wrapper>
         <Content>
           <Header>
-            <Logo>Uicab</Logo>
+            <Logo>Uicab{this.props.login.language}</Logo>
           </Header>
           <LoginWrapper>
             <FormWrapper>
@@ -121,7 +134,7 @@ export class Login extends Component {
                 <Item>
                   <Checkbox>一周内自动登录</Checkbox>
                   <ForgetButton>忘记密码</ForgetButton>
-                  <Button size="large" type="primary">
+                  <Button size="large" type="primary" onClick={this.onLogin}>
                     登录
                   </Button>
                 </Item>
@@ -140,4 +153,10 @@ export class Login extends Component {
   }
 
   private onSubmit = (): void => {};
+  private onLogin = (): void => {
+    let {
+      history: { goBack }
+    } = this.props;
+    goBack();
+  };
 }
