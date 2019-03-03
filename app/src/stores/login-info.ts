@@ -1,6 +1,4 @@
-import { configure, observable, action, computed } from "mobx";
-
-configure({ enforceActions: "observed" });
+import { observable, action, computed } from "mobx";
 
 class UiState {
   @observable language = 1;

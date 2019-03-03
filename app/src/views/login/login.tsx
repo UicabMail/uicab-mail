@@ -1,10 +1,10 @@
 import { Form as _Form, Input, Checkbox, Button } from "antd";
 import { observer, inject } from "mobx-react";
-import React, { Component } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import React, { Component, ChangeEvent } from "react";
 import styled from "styled-components";
 
 import login from "../../assets/login.jpg";
+import { ServicesProps } from "../../service-entrances";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -98,43 +98,56 @@ const Footer = styled.div`
   align-items: center;
 `;
 
-interface LoginProps extends RouteComponentProps {
-  login: any;
-}
+interface LoginProps extends ServicesProps {}
 
-@inject("login")
+@inject("userService")
 @observer
 export class Login extends Component<LoginProps> {
-  componentDidMount() {
-    this.props.login.setL();
-    console.log(this.props);
-  }
+  private username = "";
+
+  private password = "";
+
+  private remember = true;
 
   render() {
     return (
       <Wrapper>
         <Content>
           <Header>
-            <Logo>Uicab{this.props.login.language}</Logo>
+            <Logo>Uicab</Logo>
           </Header>
           <LoginWrapper>
             <FormWrapper>
               <Title>账号密码登录</Title>
-              <Form onSubmit={this.onSubmit}>
+              <Form>
                 <Item>
-                  <Input size="large" placeholder="邮箱账号 / 管理员账号" />
+                  <Input
+                    size="large"
+                    placeholder="邮箱账号 / 管理员账号"
+                    onChange={this.onUsernameChange}
+                  />
                 </Item>
                 <Item>
                   <Input
                     size="large"
                     type="password"
                     placeholder="请输入邮箱密码"
+                    onChange={this.onPasswordChange}
                   />
                 </Item>
                 <Item>
-                  <Checkbox>一周内自动登录</Checkbox>
+                  <Checkbox
+                    defaultChecked={this.remember}
+                    onChange={this.onCheckboxChange}
+                  >
+                    一周内自动登录
+                  </Checkbox>
                   <ForgetButton>忘记密码</ForgetButton>
-                  <Button size="large" type="primary" onClick={this.onLogin}>
+                  <Button
+                    size="large"
+                    type="primary"
+                    onClick={this.onLoginButtonClick}
+                  >
                     登录
                   </Button>
                 </Item>
@@ -152,11 +165,28 @@ export class Login extends Component<LoginProps> {
     );
   }
 
-  private onSubmit = (): void => {};
-  private onLogin = (): void => {
-    let {
-      history: { goBack }
-    } = this.props;
-    goBack();
+  private onUsernameChange = ({
+    target
+  }: ChangeEvent<HTMLInputElement>): void => {
+    this.username = target.value.trim() || "";
+  };
+
+  private onPasswordChange = ({
+    target
+  }: ChangeEvent<HTMLInputElement>): void => {
+    this.password = target.value.trim() || "";
+  };
+
+  private onCheckboxChange = (): void => {
+    this.remember = !this.remember;
+  };
+
+  private onLoginButtonClick = (): void => {
+    let { userService } = this.props;
+    let username = this.username;
+    let password = this.password;
+    let remember = this.remember;
+
+    userService!.login({ username, password }, remember);
   };
 }

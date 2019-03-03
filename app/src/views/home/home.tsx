@@ -3,6 +3,9 @@ import { observer } from "mobx-react";
 import styled from "styled-components";
 import { Header } from "./@header";
 import { Left } from "./@left";
+import { Route } from "react-router";
+import { Inbox } from "../inbox";
+import { Drafts } from "../drafts";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -21,6 +24,7 @@ const ContentWrapper = styled.div`
 const Content = styled.div`
   flex: 1;
   background-color: #fff;
+  overflow: hidden;
 `;
 
 interface HomeProps {}
@@ -33,7 +37,10 @@ export class Home extends Component<HomeProps> {
         <Header />
         <ContentWrapper>
           <Left />
-          <Content />
+          <Content>
+            <Route path="/inbox" component={Inbox} />
+            <Route path="/drafts" component={Drafts} />
+          </Content>
         </ContentWrapper>
       </Wrapper>
     );

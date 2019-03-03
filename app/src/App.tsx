@@ -1,44 +1,53 @@
-import { Button } from "antd";
-import * as React from "react";
-import styled from "styled-components";
-import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import React, { ReactNode } from "react";
+import {
+  HashRouter as Router,
+  Route
+  // Route,
+  // Switch,
+  // Redirect
+} from "react-router-dom";
 import { Provider, observer } from "mobx-react";
 
 import { Login } from "./views/login";
 import { Home } from "./views/home";
 import * as stores from "./stores";
+import * as services from "./service-entrances";
 import "./App.css";
-
-const AppTitle = styled.h1``;
+import { computed, observable, runInAction } from "mobx";
+import { Loading } from "./components/loading";
 
 @observer
 class App extends React.Component {
-  public render() {
-    console.log(1);
+  @observable
+  private loading = true;
 
+  @computed
+  private get isLogin(): boolean {
+    let { userService } = services;
+
+    return userService.isLogin;
+  }
+
+  componentDidMount(): void {
+    setTimeout(() => runInAction(() => (this.loading = false)), 800);
+  }
+
+  public render() {
     return (
-      <Provider {...stores}>
+      <Provider {...stores} {...services}>
         <Router>
           <div className="App">
-            <Switch>
-              <Route exact path="/login" component={Login} />
-              <Route path="/home" component={Home} />
-              <Route component={NoMatch} />
-            </Switch>
+            {this.renderLoading()}
+            {this.isLogin ? <Route path="/" component={Home} /> : <Login />}
           </div>
         </Router>
       </Provider>
     );
   }
-}
 
-const NoMatch = () => (
-  <>
-    <AppTitle>Welcome to Uicab Mail</AppTitle>
-    <Button type="primary">
-      React/ TypeScript / Mobx / Antd / StyledComponents
-    </Button>
-  </>
-);
+  private renderLoading(): ReactNode {
+    return this.loading ? <Loading percent={69} /> : undefined;
+  }
+}
 
 export default App;

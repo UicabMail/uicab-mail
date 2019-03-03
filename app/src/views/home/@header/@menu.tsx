@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import styled from "styled-components";
 import { Avatar, Icon, Tooltip } from "antd";
+import { ServicesProps } from "../../../service-entrances";
 
 const Wrapper = styled.div`
   width: 180px;
@@ -33,8 +34,9 @@ const MenuIcon = styled(Icon)`
   }
 `;
 
-interface MenuProps {}
+interface MenuProps extends ServicesProps {}
 
+@inject("userService")
 @observer
 export class Menu extends Component<MenuProps> {
   render() {
@@ -46,7 +48,7 @@ export class Menu extends Component<MenuProps> {
           mouseEnterDelay={0.5}
           arrowPointAtCenter={true}
         >
-          <MenuIcon type="logout" />
+          <MenuIcon type="logout" onClick={this.onLoginOutClick} />
         </Tooltip>
         <UserAvatar style={{ backgroundColor: "#009960" }} size={32}>
           B
@@ -54,4 +56,10 @@ export class Menu extends Component<MenuProps> {
       </Wrapper>
     );
   }
+
+  private onLoginOutClick = (): void => {
+    let { userService } = this.props;
+
+    userService!.loginOut();
+  };
 }
