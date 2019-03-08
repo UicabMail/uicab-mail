@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { observer } from "mobx-react";
 import styled from "styled-components";
-import { Icon as _Icon, Badge as _Badge } from "antd";
+import { Badge as _Badge } from "antd";
 import classNames from "classnames";
+
+import { IconFont as _Icon } from "../../../components";
 
 const Wrapper = styled.div`
   height: 36px;

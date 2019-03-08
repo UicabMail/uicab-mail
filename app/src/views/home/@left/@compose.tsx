@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { observer } from "mobx-react";
-// import styled from "styled-components";
-import { Drawer } from "antd";
-
-// const Wrapper = styled.div``;
+import { Form, Input, Button, Drawer } from "antd";
 
 interface ComposeProps {
   visible: boolean;
@@ -23,9 +20,25 @@ export class Compose extends Component<ComposeProps> {
         onClose={this.onClose}
         visible={visible}
       >
-        <p>施工中...</p>
-        <p>慢慢来...</p>
-        <p>不着急...</p>
+        <Form>
+          <Form.Item label="发件人">
+            <Input placeholder="请输入发件人" />
+          </Form.Item>
+          <Form.Item label="收件人">
+            <Input placeholder="请输入收件人" />
+          </Form.Item>
+          <Form.Item label="主题">
+            <Input placeholder="请输入主题" />
+          </Form.Item>
+          <Form.Item label="内容">
+            <Input.TextArea placeholder="请输入内容" rows={6} />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" icon="upload" size="large">
+              发送邮件
+            </Button>
+          </Form.Item>
+        </Form>
       </Drawer>
     );
   }

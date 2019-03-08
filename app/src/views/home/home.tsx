@@ -6,6 +6,7 @@ import { Left } from "./@left";
 import { Route } from "react-router";
 import { Inbox } from "../inbox";
 import { Drafts } from "../drafts";
+import { Detail } from "../detail";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -40,6 +41,7 @@ export class Home extends Component<HomeProps> {
           <Content>
             <Route path="/inbox" component={Inbox} />
             <Route path="/drafts" component={Drafts} />
+            <Route path="/detail" component={Detail} />
           </Content>
         </ContentWrapper>
       </Wrapper>

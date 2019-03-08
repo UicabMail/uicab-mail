@@ -35,6 +35,12 @@ export class UserService {
     if (user) {
       this.login(user);
     }
+
+
+    // 模拟登录
+    let  u:User = {username: 'boen', password: '123456'} 
+    this.login(u, true);
+    this.loginEvent(u);
   }
 
   readonly login = (user: User, remember?: boolean): void => {

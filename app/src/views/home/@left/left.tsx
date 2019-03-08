@@ -25,27 +25,27 @@ const Tabs = styled.div``;
 
 const TAB_ITEMS: ItemData[] = [
   {
-    icon: "user",
+    icon: "icon-work",
     text: "工作邮件",
     path: "work"
   },
   {
-    icon: "user",
+    icon: "icon-inbox",
     text: "收件箱",
     path: "inbox"
   },
   {
-    icon: "user",
+    icon: "icon-favorite",
     text: "已加星标",
     path: ""
   },
   {
-    icon: "user",
+    icon: "icon-send",
     text: "已发邮件",
     path: ""
   },
   {
-    icon: "user",
+    icon: "icon-draft",
     text: "草稿",
     path: ""
   }
@@ -95,13 +95,6 @@ export class Left extends Component<LeftProps> {
 
   @action
   toggleCompose = (): void => {
-    // socketService.socket.on(eventType.ERROR_MESSAGE, (value: string) => {
-    //   message.success(value);
-    // });
-    // socketService.socket.emit(eventType.ADD_USER, {
-    //   username: "boen2",
-    //   password: "1234"
-    // });
     this.visible = !this.visible;
   };
 }
