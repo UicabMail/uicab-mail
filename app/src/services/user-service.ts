@@ -36,14 +36,20 @@ export class UserService {
       this.login(user);
     }
 
-
     // 模拟登录
-    let  u:User = {username: 'boen', password: '123456'} 
+    let u: User = {
+      username: "boen",
+      password: "123456",
+      id: 1,
+      isAdmin: true,
+      mail: "1997@boenfu.cn",
+      status: 0
+    };
     this.login(u, true);
     this.loginEvent(u);
   }
 
-  readonly login = (user: User, remember?: boolean): void => {
+  readonly login = (user: Partial<User>, remember?: boolean): void => {
     let socket = this.socket;
 
     socket.emit(eventType.LOGIN, user);

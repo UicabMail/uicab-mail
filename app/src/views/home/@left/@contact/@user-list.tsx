@@ -5,16 +5,16 @@ import { List, Avatar } from "antd";
 
 const data = [
   {
-    title: "Title 1"
+    title: "联系人 1"
   },
   {
-    title: "Title 2"
+    title: "联系人 2"
   },
   {
-    title: "Title 3"
+    title: "联系人 3"
   },
   {
-    title: "Title 4"
+    title: "联系人 4"
   }
 ];
 

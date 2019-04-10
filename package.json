@@ -1,0 +1,11 @@
+{
+  "name": "uicab-mail",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd ./app & yarn start"
+  },
+  "repository": "git@github.com:UicabMail/uicab-mail.git",
+  "author": "boenfu <1997@boenfu.cn>",
+  "license": "MIT"
+}

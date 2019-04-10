@@ -89,11 +89,9 @@ export class MailItem extends Component<MailItemProps> {
         <Checkbox />
         <Icon type="star" title="星标" />
         <Icon type="tag" title="标记" />
-        <Title>11</Title>
+        <Title>邮件标题</Title>
         <Content>
-          <Text>
-            1131232131asdas试试暗杀实打实大苏打撒旦啊实打实大苏打啊大苏打撒旦sssss
-          </Text>
+          <Text>这是一封模拟的邮件内容</Text>
           <Menu>
             <Icon type="delete" />
           </Menu>

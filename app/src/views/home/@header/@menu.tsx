@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { observer, inject } from "mobx-react";
 import styled from "styled-components";
 import { Avatar, Icon, Tooltip } from "antd";
+
 import { ServicesProps } from "../../../service-entrances";
 
 const Wrapper = styled.div`
@@ -11,10 +13,9 @@ const Wrapper = styled.div`
   flex-direction: row-reverse;
 `;
 
-const UserAvatar = styled(Avatar)`
-  display: block;
+const AvatarWrapper = styled(Link)`
   margin: 0 4px;
-  cursor: default;
+  cursor: pointer;
 `;
 
 const MenuIcon = styled(Icon)`
@@ -50,9 +51,12 @@ export class Menu extends Component<MenuProps> {
         >
           <MenuIcon type="logout" onClick={this.onLoginOutClick} />
         </Tooltip>
-        <UserAvatar style={{ backgroundColor: "#009960" }} size={32}>
-          B
-        </UserAvatar>
+
+        <AvatarWrapper to="/profile">
+          <Avatar style={{ backgroundColor: "#009960" }} size={32}>
+            B
+          </Avatar>
+        </AvatarWrapper>
       </Wrapper>
     );
   }
