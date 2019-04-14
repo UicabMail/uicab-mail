@@ -18,6 +18,7 @@
     "babel-plugin-named-asset-import": "^0.3.0",
     "babel-preset-react-app": "^7.0.0",
     "bfj": "6.1.1",
+    "braft-editor": "^2.2.9",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",
     "classnames": "^2.2.6",
@@ -133,6 +134,7 @@
     ]
   },
   "devDependencies": {
+    "@types/braft-editor": "^1.9.2",
     "@types/classnames": "^2.2.7",
     "@types/date-fns": "^2.6.0",
     "@types/lodash": "^4.14.119",

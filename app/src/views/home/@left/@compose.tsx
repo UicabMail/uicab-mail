@@ -1,20 +1,35 @@
 import React, { Component } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, Button, Drawer } from "antd";
+import styled from "styled-components";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-interface ComposeProps {
+interface ComposeProps extends RouteComponentProps {
   visible: boolean;
   onClose(): void;
 }
 
+const DrawerTitle = styled.div`
+  > * {
+    margin-left: 10px;
+  }
+`;
+
 @observer
-export class Compose extends Component<ComposeProps> {
+class _Compose extends Component<ComposeProps> {
   render() {
     let { visible } = this.props;
     return (
       <Drawer
         width={480}
-        title="邮件编写"
+        title={
+          <DrawerTitle>
+            快捷邮件
+            <Button type="dashed" size="small" onClick={this.onEditButtonClick}>
+              完整模式
+            </Button>
+          </DrawerTitle>
+        }
         placement="right"
         mask={false}
         onClose={this.onClose}
@@ -43,8 +58,16 @@ export class Compose extends Component<ComposeProps> {
     );
   }
 
+  private onEditButtonClick = (): void => {
+    let { history, onClose } = this.props;
+    history.push("edit");
+    onClose();
+  };
+
   private onClose = (): void => {
     let { onClose } = this.props;
     onClose();
   };
 }
+
+export const Compose = withRouter(_Compose);

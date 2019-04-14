@@ -8,6 +8,7 @@ import { Inbox } from "../inbox";
 import { Drafts } from "../drafts";
 import { Detail } from "../detail";
 import { WrapperProfile } from "../profile";
+import { Edit } from "../edit";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -46,6 +47,7 @@ export class Home extends Component<HomeProps> {
             <Route path="/drafts" component={Drafts} />
             <Route path="/detail" component={Detail} />
             <Route path="/profile" component={WrapperProfile} />
+            <Route path="/edit" component={Edit} />
           </Content>
         </ContentWrapper>
       </Wrapper>
