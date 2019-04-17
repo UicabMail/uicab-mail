@@ -109,21 +109,26 @@ export class _Departments extends Component<DepartmentsProps> {
     let Option = Select.Option;
 
     return (
-      <Select
-        showSearch
-        placeholder="Select a person"
-        optionFilterProp="children"
-        onChange={this.onChange}
-        filterOption={(input, option) =>
-          (option.props.children as string)
-            .toLowerCase()
-            .indexOf(input.toLowerCase()) >= 0
-        }
-      >
-        <Option value="jack">Jack</Option>
-        <Option value="lucy">Lucy</Option>
-        <Option value="tom">Tom</Option>
-      </Select>
+      <>
+        <Button type="primary" style={{ marginBottom: "20px" }}>
+          新增部门
+        </Button>
+        <Select
+          showSearch
+          placeholder="选择部门"
+          optionFilterProp="children"
+          onChange={this.onChange}
+          filterOption={(input, option) =>
+            (option.props.children as string)
+              .toLowerCase()
+              .indexOf(input.toLowerCase()) >= 0
+          }
+        >
+          <Option value="jack">研发部</Option>
+          <Option value="lucy">人事部</Option>
+          <Option value="tom">行政部</Option>
+        </Select>
+      </>
     );
   }
 

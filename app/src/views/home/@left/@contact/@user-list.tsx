@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import styled from "styled-components";
 import { List, Avatar } from "antd";
+import { User } from "../../../../models";
+import { ServicesProps } from "../../../../service-entrances";
 
 const data = [
   {
@@ -22,8 +24,11 @@ const Wrapper = styled.div`
   flex: 1;
 `;
 
-interface UserListProps {}
+interface UserListProps extends ServicesProps {
+  onUserClick(user: User): void;
+}
 
+@inject("userService")
 @observer
 export class UserList extends Component<UserListProps> {
   render() {
@@ -40,11 +45,22 @@ export class UserList extends Component<UserListProps> {
                 }
                 title={item.title}
               />
-              <div>写信</div>
+              <div
+                onClick={() => {
+                  this.onClick();
+                }}
+              >
+                写信
+              </div>
             </List.Item>
           )}
         />
       </Wrapper>
     );
+  }
+
+  private onClick(): void {
+    let { onUserClick, userService } = this.props;
+    onUserClick(userService!.user!);
   }
 }

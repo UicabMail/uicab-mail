@@ -59,7 +59,7 @@ class _AddUser extends Component<AddUserProps> {
               {getFieldDecorator("deptId_new", {
                 rules: [{ required: true, message: "请选择部门" }]
               })(
-                <Select placeholder="Please select a country">
+                <Select placeholder="请选择部门">
                   <Option value="china">China</Option>
                   <Option value="usa">U.S.A</Option>
                 </Select>
