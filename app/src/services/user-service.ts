@@ -1,9 +1,14 @@
 import { SocketService } from "./socket-service";
-import { eventType } from "../config";
+import { eventType, EventType } from "../config";
 import { User } from "../models/user";
 import { computed, observable, action } from "mobx";
 import { LocalDBService } from "./local-db-service";
 import { isAfter } from "date-fns";
+
+export type UserEventType = keyof Pick<
+  EventType,
+  "ADD_USER" | "UPDATE_USER" | "REMOVE_USER" | "GET_USER" | "SEARCH_USER"
+>;
 
 export class UserService {
   @observable
@@ -93,8 +98,20 @@ export class UserService {
     }
   };
 
+  create = (user: User): void => {
+    this.socket.emit(eventType.ADD_USER, user);
+  };
+
   @action
   private setUser(user: User | undefined): void {
     this._user = user;
+  }
+
+  on(type: UserEventType, event: (...arg: any) => void): void {
+    this.socket.on(eventType[type], event);
+  }
+
+  off(type: UserEventType, event: (...arg: any) => void): void {
+    this.socket.off(eventType[type], event);
   }
 }

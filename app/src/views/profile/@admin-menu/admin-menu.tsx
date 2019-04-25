@@ -110,6 +110,7 @@ export class AdminMenu extends Component<AdminMenuProps> {
     this.modalVisible = false;
   };
 
+  @action
   private onOk = (): void => {
     let current = this.modalContentRef.current!;
 
@@ -118,11 +119,12 @@ export class AdminMenu extends Component<AdminMenuProps> {
 
     if (content.validateFields) {
       let values = content.validateFields();
-      console.log(values);
-    }
-    this.modalVisible = false;
 
-    switch (this.action) {
+      if (values) {
+        this.modalVisible = false;
+      }
+    } else {
+      this.modalVisible = false;
     }
   };
 }

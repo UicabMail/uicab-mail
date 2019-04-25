@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 import styled from "styled-components";
-import { Form, Input, Switch, Select } from "antd";
+import { Form, Input, Switch, Select, message } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import { ServicesProps } from "../../../service-entrances";
 import { computed } from "mobx";
-import { User } from "../../../models/user";
+// import { User } from "../../../models/user";
+import { Department, User } from "../../../models";
 
 const Wrapper = styled.div`
   position: relative;
@@ -23,23 +24,22 @@ const FormWrapper = styled.div`
 
 interface AddUserProps extends FormComponentProps, ServicesProps {}
 
-@inject("userService")
+@inject("userService", "departmentService")
 @observer
 class _AddUser extends Component<AddUserProps> {
+  private departmentService = this.props.departmentService!;
+
+  private userService = this.props.userService!;
+
   @computed
-  private get user(): User | undefined {
-    return this.props.userService!.user;
+  private get departments(): Department[] {
+    return this.departmentService.departments;
   }
 
   render() {
     let {
       form: { getFieldDecorator }
     } = this.props;
-    let user = this.user;
-
-    if (!user) {
-      return undefined;
-    }
 
     return (
       <Wrapper>
@@ -56,24 +56,42 @@ class _AddUser extends Component<AddUserProps> {
               })(<Input type="password" />)}
             </Form.Item>
             <Form.Item label="选择部门" hasFeedback>
-              {getFieldDecorator("deptId_new", {
+              {getFieldDecorator("dept_new", {
                 rules: [{ required: true, message: "请选择部门" }]
               })(
-                <Select placeholder="请选择部门">
-                  <Option value="china">China</Option>
-                  <Option value="usa">U.S.A</Option>
+                <Select
+                  showSearch
+                  placeholder="选择部门"
+                  optionFilterProp="children"
+                  onFocus={() => {
+                    this.departmentService.getDepartments();
+                  }}
+                  filterOption={(input, option) =>
+                    (option.props.children as string)
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {this.departments.map(({ name, id }) => (
+                    <Option key={`${id}`}>{name}</Option>
+                  ))}
                 </Select>
               )}
             </Form.Item>
             <Form.Item label="是否为管理员">
-              {getFieldDecorator("isAdmin_new", { valuePropName: "checked" })(
-                <Switch />
-              )}
+              {getFieldDecorator("isAdmin_new", {
+                valuePropName: "checked",
+                initialValue: false
+              })(<Switch />)}
             </Form.Item>
           </Form>
         </FormWrapper>
       </Wrapper>
     );
+  }
+
+  componentDidMount(): void {
+    this.userService.on("ADD_USER", this.onAddUser);
   }
 
   validateFields = (): any | undefined => {
@@ -86,9 +104,25 @@ class _AddUser extends Component<AddUserProps> {
       }
 
       result = values;
+
+      let user = {};
+
+      for (let key in values) {
+        user[key.replace("_new", "")] = values[key];
+      }
+
+      this.userService.create(user as User);
     });
 
     return result;
+  };
+
+  private onAddUser = (success: boolean): void => {
+    console.log(success);
+
+    if (success) {
+      message.success("新增用户成功");
+    }
   };
 }
 

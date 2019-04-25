@@ -1,28 +1,28 @@
 export class EventType {
   readonly INITIALIZATION = "-1";
 
-  readonly REGISTER = "4396";
-  readonly LOGIN = "10910";
-  readonly LOGIN_OUT = "10911";
-  readonly USERS = "7234";
-  readonly SEND = "2373";
-  readonly RECEIVED = "9511";
-  readonly MAILS = "9105";
-  readonly MESSAGING = "9709";
+  readonly REGISTER = ".c?_Fd4o";
+  readonly LOGIN = "-QmH}4BC";
+  readonly LOGIN_OUT = "jQ?7*^tV";
+  readonly USERS = "i@^]wp3V";
+  readonly SEND = "by7~)DWh";
+  readonly RECEIVED = "wotwV8>D";
+  readonly MAILS = "7u6!9-we";
+  readonly MESSAGING = "]FB9GYpy";
 
-  readonly GET_USER = "6457234";
-  readonly ADD_USER = "1337234";
-  readonly REMOVE_USER = "1337234";
-  readonly UPDATE_USER = "7072324";
-  readonly SEARCH_USER = "33247234";
+  readonly GET_USER = "f.tR>Q6L";
+  readonly ADD_USER = "h*CcnK3-";
+  readonly REMOVE_USER = "99eqzV@F";
+  readonly UPDATE_USER = "H99n]Aju";
+  readonly SEARCH_USER = ">%2NVx*_";
 
-  readonly ERROR_MESSAGE = "3449401";
-  readonly ERROR_NOTIFICATION = "3449402";
+  readonly ERROR_MESSAGE = "#>28wy@~";
+  readonly ERROR_NOTIFICATION = "jK9kx3+K";
 
-  readonly GET_DEPT = "6453305";
-  readonly ADD_DEPT = "1333305";
-  readonly REMOVE_DEPT = "4893305";
-  readonly UPDATE_DEPT = "70353305";
+  readonly GET_DEPT = "K6YNs:M?";
+  readonly ADD_DEPT = "}NVY8txr";
+  readonly REMOVE_DEPT = "W2M2+^4P";
+  readonly UPDATE_DEPT = "#%-R2V2X";
 }
 
 export const eventType = new EventType();
