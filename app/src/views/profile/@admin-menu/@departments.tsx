@@ -1,7 +1,7 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component, ReactNode, FormEvent } from "react";
 import { observer, inject } from "mobx-react";
 import styled from "styled-components";
-import { Select, Button, Icon, Form, Input, Transfer } from "antd";
+import { Select, Button, Icon, Form, Input, Transfer, message } from "antd";
 import { computed, observable, action } from "mobx";
 
 import { ServicesProps } from "../../../service-entrances";
@@ -9,6 +9,8 @@ import { User, Department } from "../../../models";
 import { FormComponentProps } from "antd/lib/form";
 
 type SetupType = "select" | "edit" | "move";
+
+type EditType = "create" | "update";
 
 const SETUP_INFO: SetupType[] = ["select", "edit", "move"];
 
@@ -42,7 +44,7 @@ const ButtonWrapper = styled.div`
 
 interface DepartmentsProps extends ServicesProps, FormComponentProps {}
 
-@inject("userService")
+@inject("userService", "departmentService")
 @observer
 export class _Departments extends Component<DepartmentsProps> {
   @observable
@@ -51,14 +53,49 @@ export class _Departments extends Component<DepartmentsProps> {
   @observable
   private selectedDepartment: Department | undefined;
 
+  @observable
+  private editMode: EditType = "update";
+
+  private departmentService = this.props.departmentService!;
+
+  private initDepartment = {
+    id: Date.now(),
+    name: "",
+    placard: "",
+    owner: this.user.id
+  } as Department;
+
+  private createDepartment = { ...this.initDepartment };
+
+  @computed
+  private get departmentIdToDepartmentMap(): Map<string, Department> {
+    return new Map(
+      this.departments.map(
+        (department): [string, Department] => [`${department.id}`, department]
+      )
+    );
+  }
+
+  @computed
+  private get department(): Department | undefined {
+    return this.editMode === "create"
+      ? this.createDepartment
+      : this.selectedDepartment;
+  }
+
+  @computed
+  private get departments(): Department[] {
+    return this.departmentService.departments;
+  }
+
   @computed
   private get setup(): SetupType {
     return SETUP_INFO[this.setupIndex];
   }
 
   @computed
-  private get user(): User | undefined {
-    return this.props.userService!.user;
+  private get user(): User {
+    return this.props.userService!.user!;
   }
 
   @computed
@@ -110,23 +147,30 @@ export class _Departments extends Component<DepartmentsProps> {
 
     return (
       <>
-        <Button type="primary" style={{ marginBottom: "20px" }}>
+        <Button
+          type="primary"
+          style={{ marginBottom: "20px" }}
+          onClick={this.onCreateButtonClick}
+        >
           新增部门
         </Button>
         <Select
           showSearch
           placeholder="选择部门"
           optionFilterProp="children"
-          onChange={this.onChange}
+          onChange={this.onSelectChange}
+          onFocus={() => {
+            this.departmentService.getDepartments();
+          }}
           filterOption={(input, option) =>
             (option.props.children as string)
               .toLowerCase()
               .indexOf(input.toLowerCase()) >= 0
           }
         >
-          <Option value="jack">研发部</Option>
-          <Option value="lucy">人事部</Option>
-          <Option value="tom">行政部</Option>
+          {this.departments.map(({ name, id }) => (
+            <Option key={`${id}`}>{name}</Option>
+          ))}
         </Select>
       </>
     );
@@ -137,38 +181,49 @@ export class _Departments extends Component<DepartmentsProps> {
     let {
       form: { getFieldDecorator }
     } = this.props;
-    let department = this.selectedDepartment;
+
+    let department = this.department;
 
     if (!department) {
       return undefined;
     }
 
     let { id, placard, name } = department;
+    let isUpdate = this.editMode !== "create";
 
     return (
       <EditWrapper>
-        <Form>
-          <Form.Item label="部门编号">
-            <Input defaultValue={`${id}`} disabled />
-          </Form.Item>
+        <Form onSubmit={this.onSubmit}>
+          {isUpdate ? (
+            <Form.Item label="部门编号">
+              <Input defaultValue={`${id}`} disabled />
+            </Form.Item>
+          ) : (
+            undefined
+          )}
           <Form.Item label="部门名称">
-            {getFieldDecorator("dept_name", {
+            {getFieldDecorator("name", {
               initialValue: name,
               rules: [{ required: true, message: "请输入部门名称" }]
             })(<Input />)}
           </Form.Item>
           <Form.Item label="部门公告">
-            {getFieldDecorator("dept_placard", {
+            {getFieldDecorator("placard", {
               initialValue: placard
             })(<Input />)}
           </Form.Item>
           <ButtonWrapper>
             <Button type="primary" htmlType="submit">
-              保存修改
+              {isUpdate ? "保存修改" : "创建部门"}
             </Button>
-            <Button type="danger" ghost onClick={this.onDeleteButtonClick}>
-              删除部门
-            </Button>
+
+            {isUpdate ? (
+              <Button type="danger" ghost onClick={this.onDeleteButtonClick}>
+                删除部门
+              </Button>
+            ) : (
+              undefined
+            )}
           </ButtonWrapper>
         </Form>
       </EditWrapper>
@@ -206,26 +261,77 @@ export class _Departments extends Component<DepartmentsProps> {
     );
   }
 
-  validateFields = (): any | undefined => {};
+  componentDidMount(): void {
+    this.departmentService.on("ADD_DEPT", this.onAddDept);
+    this.departmentService.on("UPDATE_DEPT", this.onUpdateDept);
+    this.departmentService.on("REMOVE_DEPT", this.onRemoveDept);
+  }
 
-  private onChange = (value: string): void => {
-    console.log(value);
-    if (value) {
+  componentWillUnmount(): void {
+    this.departmentService.off("ADD_DEPT", this.onAddDept);
+    this.departmentService.off("UPDATE_DEPT", this.onUpdateDept);
+    this.departmentService.off("REMOVE_DEPT", this.onRemoveDept);
+  }
+
+  private onAddDept = (): void => {
+    message.success("新增部门成功");
+    this.createDepartment = { ...this.initDepartment };
+    this.props.form.resetFields();
+  };
+
+  private onUpdateDept = (): void => {
+    message.success("更新部门成功");
+  };
+
+  private onRemoveDept = (): void => {
+    message.success("删除部门成功");
+    this.onBackClick();
+  };
+
+  private onCreateButtonClick = (): void => {
+    this.setSetupIndex(this.setupIndex + 1);
+    this.setEditMode("create");
+  };
+
+  private onSubmit = (event: FormEvent): void => {
+    let { form } = this.props;
+
+    event.preventDefault();
+
+    form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+
+      if (this.editMode === "create") {
+        this.departmentService.create({ ...values, owner: this.user.id });
+      } else {
+        this.departmentService.update({
+          ...this.selectedDepartment,
+          ...values
+        });
+      }
+    });
+  };
+
+  private onSelectChange = (id: string): void => {
+    if (id) {
       this.setSetupIndex(this.setupIndex + 1);
-      this.setSelectedDepartment({
-        id: 1,
-        ownerId: 1,
-        name: "研发部",
-        placard: "大家加油"
-      });
+      this.setSelectedDepartment(this.departmentIdToDepartmentMap.get(id));
     }
   };
 
-  private onDeleteButtonClick = (): void => {};
+  private onDeleteButtonClick = (): void => {
+    this.departmentService.delete(this.selectedDepartment!);
+  };
 
   private onBackClick = (): void => {
     if (this.setupIndex) {
       this.setSetupIndex(this.setupIndex - 1);
+    }
+
+    if (this.editMode === "create") {
+      this.setEditMode("update");
     }
   };
 
@@ -236,6 +342,11 @@ export class _Departments extends Component<DepartmentsProps> {
   @action
   private setSetupIndex(setupIndex: number): void {
     this.setupIndex = setupIndex;
+  }
+
+  @action
+  private setEditMode(editMode: EditType): void {
+    this.editMode = editMode;
   }
 
   @action

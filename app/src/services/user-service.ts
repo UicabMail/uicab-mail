@@ -37,16 +37,16 @@ export class UserService {
     }
 
     // 模拟登录
-    let u: User = {
-      username: "boen",
-      password: "123456",
-      id: 1,
-      isAdmin: true,
-      mail: "1997@boenfu.cn",
-      status: 0
-    };
-    this.login(u, true);
-    this.loginEvent(u);
+    // let u: User = {
+    //   username: "boen",
+    //   password: "123456",
+    //   id: 1,
+    //   isAdmin: true,
+    //   mail: "1997@boenfu.cn",
+    //   status: 0
+    // };
+    this.login({ username: "boen", password: "123456" }, true);
+    // this.loginEvent(u);
   }
 
   readonly login = (user: Partial<User>, remember?: boolean): void => {

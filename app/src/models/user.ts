@@ -5,6 +5,6 @@ export interface User {
   password: string;
   mail: string;
   status: number;
-  deptId?: number;
+  dept?: number;
   mobile?: string;
 }

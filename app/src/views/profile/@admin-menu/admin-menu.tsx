@@ -31,7 +31,7 @@ export class AdminMenu extends Component<AdminMenuProps> {
       case "users":
         return <Users ref={this.modalContentRef} />;
       case "departments":
-        return <Departments />;
+        return <Departments ref={this.modalContentRef} />;
       default:
         return undefined;
     }
@@ -112,11 +112,15 @@ export class AdminMenu extends Component<AdminMenuProps> {
 
   private onOk = (): void => {
     let current = this.modalContentRef.current!;
+
     let content =
       "wrappedInstance" in current ? current.wrappedInstance : current;
 
-    let values = content.validateFields();
-    console.log(values);
+    if (content.validateFields) {
+      let values = content.validateFields();
+      console.log(values);
+    }
+    this.modalVisible = false;
 
     switch (this.action) {
     }

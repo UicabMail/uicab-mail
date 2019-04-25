@@ -105,7 +105,9 @@ class Profile extends Component<ProfileProps> {
         return;
       }
 
-      console.log({ ...this.user, ...values });
+      console.log(values);
+
+      // userService.updateProfile({ ...this.user, ...values });
     });
   };
 }

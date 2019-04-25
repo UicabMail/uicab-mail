@@ -1,6 +1,6 @@
 export interface Department {
   id: number;
-  ownerId: number;
+  owner: number;
   name: string;
   placard?: string;
 }
