@@ -102,6 +102,18 @@ export class UserService {
     this.socket.emit(eventType.ADD_USER, user);
   };
 
+  updateProfile = (user: Partial<User>): void => {
+    this.socket.emit(eventType.UPDATE_USER, user);
+  };
+
+  delete = (user: Partial<User>): void => {
+    this.socket.emit(eventType.REMOVE_USER, user);
+  };
+
+  searchUser = (key: string): void => {
+    this.socket.emit(eventType.SEARCH_USER, key);
+  };
+
   @action
   private setUser(user: User | undefined): void {
     this._user = user;
