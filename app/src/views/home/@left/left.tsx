@@ -9,7 +9,7 @@ import { observable, action } from "mobx";
 import { Link } from "react-router-dom";
 
 const Wrapper = styled.div`
-  width: 256px;
+  width: 280px;
   height: 100%;
   display: flex;
   flex-direction: column;

@@ -16,7 +16,8 @@ const Name = styled.div`
 const Text = styled.div`
   padding: 4px 4%;
   font-size: 14px;
-  min-width: 140px;
+  min-width: 60px;
+  min-height: 29px;
   border-radius: 6px;
 `;
 
@@ -47,20 +48,24 @@ const Wrapper = styled.div`
 `;
 
 export interface ItemProps {
+  name: string;
   message: Message;
 }
 
 export class Item extends Component<ItemProps> {
   render() {
-    let { message } = this.props;
+    let {
+      name,
+      message: { content, current }
+    } = this.props;
 
     return (
-      <Wrapper className={message.user === "1" ? "left" : "right"}>
+      <Wrapper className={!current ? "left" : "right"}>
         <Name>
           <Avatar src="https://avatars0.githubusercontent.com/u/33797740?s=460&v=4" />
-          测试用户{message.user}
+          {current ? "我" : name}
         </Name>
-        <Text>{message.content}</Text>
+        <Text>{content}</Text>
       </Wrapper>
     );
   }

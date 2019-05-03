@@ -13,6 +13,7 @@ export type UserEventType = keyof Pick<
   | "GET_USER"
   | "SEARCH_USER"
   | "CHANGE_PASS"
+  | "CHECK_ONLINE"
 >;
 
 export class UserService {
@@ -45,18 +46,6 @@ export class UserService {
     if (user) {
       this.login(user);
     }
-
-    // 模拟登录
-    // let u: User = {
-    //   username: "boen",
-    //   password: "123456",
-    //   id: 1,
-    //   isAdmin: true,
-    //   mail: "1997@boenfu.cn",
-    //   status: 0
-    // };
-    // this.login({ username: "boen", password: "123456" }, true);
-    // this.loginEvent(u);
   }
 
   readonly login = (user: Partial<User>, remember?: boolean): void => {
@@ -103,6 +92,10 @@ export class UserService {
     }
   };
 
+  getUser = (isAll: boolean): void => {
+    this.socket.emit(eventType.GET_USER, isAll);
+  };
+
   create = (user: User): void => {
     user.status = 0;
     this.socket.emit(eventType.ADD_USER, user);
@@ -126,6 +119,10 @@ export class UserService {
       { ...this.user, password: oldPass },
       newPass
     );
+  };
+
+  checkOnline = (id: number): void => {
+    this.socket.emit(eventType.CHECK_ONLINE, id);
   };
 
   @action

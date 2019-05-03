@@ -16,6 +16,7 @@ export class EventType {
   readonly UPDATE_USER = "H99n]Aju";
   readonly SEARCH_USER = ">%2NVx*_";
   readonly CHANGE_PASS = "ZX2^*&/.";
+  readonly CHECK_ONLINE = "Rd-L#4Jdqf";
 
   readonly ERROR_MESSAGE = "#>28wy@~";
   readonly ERROR_NOTIFICATION = "jK9kx3+K";
