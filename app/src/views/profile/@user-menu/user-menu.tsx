@@ -1,16 +1,18 @@
 import React, { Component, ReactNode, createRef } from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import styled from "styled-components";
-import { Dropdown, Menu, Button, Modal } from "antd";
+import { Dropdown, Menu, Button, Modal, message } from "antd";
 import { observable, action, computed } from "mobx";
 import { ChangePass } from "./@change-pass";
+import { ServicesProps } from "../../../service-entrances";
 
 const Wrapper = styled.div``;
 
-interface UserMenuProps {}
+interface UserMenuProps extends ServicesProps {}
 
 type ActionType = "change-pass" | "logout";
 
+@inject("userService")
 @observer
 export class UserMenu extends Component<UserMenuProps> {
   private modalContentRef = createRef<any>();
@@ -20,6 +22,8 @@ export class UserMenu extends Component<UserMenuProps> {
 
   @observable
   private action: ActionType | undefined;
+
+  private userService = this.props.userService!;
 
   @computed
   private get modalContent(): ReactNode {
@@ -81,6 +85,18 @@ export class UserMenu extends Component<UserMenuProps> {
     );
   }
 
+  componentDidMount(): void {
+    this.userService.on("CHANGE_PASS", this.onPasswordChange);
+  }
+
+  componentWillUnmount(): void {
+    this.userService.off("CHANGE_PASS", this.onPasswordChange);
+  }
+
+  private onPasswordChange = (updated: boolean): void => {
+    updated ? message.success("修改成功") : message.warning("密码错误修改失败");
+  };
+
   @action
   private onMenuItemClick = (action: ActionType): void => {
     this.action = action;
@@ -117,6 +133,12 @@ export class UserMenu extends Component<UserMenuProps> {
   };
 
   private changePass(values: any): void {
-    console.log(values);
+    let { old: oldPass, new: newPass, confirm: confirmPass } = values;
+
+    if (newPass !== confirmPass) {
+      return void message.warning("两次密码不一致");
+    }
+
+    this.userService.changePass(oldPass, newPass);
   }
 }

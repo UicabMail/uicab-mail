@@ -1,7 +1,7 @@
 import React, { Component, FormEvent } from "react";
 import { observer, inject } from "mobx-react";
 import styled from "styled-components";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import { ServicesProps } from "../../service-entrances";
 import { computed } from "mobx";
@@ -96,8 +96,24 @@ class Profile extends Component<ProfileProps> {
     );
   }
 
+  componentDidMount(): void {
+    let { userService } = this.props;
+
+    userService!.on("UPDATE_USER", this.onUpdate);
+  }
+
+  componentWillUnmount(): void {
+    let { userService } = this.props;
+
+    userService!.off("UPDATE_USER", this.onUpdate);
+  }
+
+  private onUpdate = () => {
+    message.success("信息修改成功");
+  };
+
   private onSubmit = (event: FormEvent): void => {
-    let { form } = this.props;
+    let { form, userService } = this.props;
     event.preventDefault();
 
     form.validateFields((err, values) => {
@@ -105,9 +121,7 @@ class Profile extends Component<ProfileProps> {
         return;
       }
 
-      console.log(values);
-
-      // userService.updateProfile({ ...this.user, ...values });
+      userService!.updateProfile({ ...this.user, ...values });
     });
   };
 }

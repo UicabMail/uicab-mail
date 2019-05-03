@@ -91,6 +91,7 @@ class _AddUser extends Component<AddUserProps> {
   }
 
   componentDidMount(): void {
+    this.userService.off("ADD_USER");
     this.userService.on("ADD_USER", this.onAddUser);
   }
 
@@ -118,8 +119,6 @@ class _AddUser extends Component<AddUserProps> {
   };
 
   private onAddUser = (success: boolean): void => {
-    console.log(success);
-
     if (success) {
       message.success("新增用户成功");
     }

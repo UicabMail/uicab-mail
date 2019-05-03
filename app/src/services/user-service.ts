@@ -7,7 +7,12 @@ import { isAfter } from "date-fns";
 
 export type UserEventType = keyof Pick<
   EventType,
-  "ADD_USER" | "UPDATE_USER" | "REMOVE_USER" | "GET_USER" | "SEARCH_USER"
+  | "ADD_USER"
+  | "UPDATE_USER"
+  | "REMOVE_USER"
+  | "GET_USER"
+  | "SEARCH_USER"
+  | "CHANGE_PASS"
 >;
 
 export class UserService {
@@ -50,7 +55,7 @@ export class UserService {
     //   mail: "1997@boenfu.cn",
     //   status: 0
     // };
-    this.login({ username: "boen", password: "123456" }, true);
+    // this.login({ username: "boen", password: "123456" }, true);
     // this.loginEvent(u);
   }
 
@@ -99,6 +104,7 @@ export class UserService {
   };
 
   create = (user: User): void => {
+    user.status = 0;
     this.socket.emit(eventType.ADD_USER, user);
   };
 
@@ -114,6 +120,14 @@ export class UserService {
     this.socket.emit(eventType.SEARCH_USER, key);
   };
 
+  changePass = (oldPass: string, newPass: string): void => {
+    this.socket.emit(
+      eventType.CHANGE_PASS,
+      { ...this.user, password: oldPass },
+      newPass
+    );
+  };
+
   @action
   private setUser(user: User | undefined): void {
     this._user = user;
@@ -123,7 +137,7 @@ export class UserService {
     this.socket.on(eventType[type], event);
   }
 
-  off(type: UserEventType, event: (...arg: any) => void): void {
+  off(type: UserEventType, event?: (...arg: any) => void): void {
     this.socket.off(eventType[type], event);
   }
 }
