@@ -1,7 +1,5 @@
 export interface Mail {
-  title: string;
+  to: string[];
+  subject: string;
   content: string;
-  from: any;
-  to: any;
-  time: any;
 }

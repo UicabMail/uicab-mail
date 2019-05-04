@@ -54,7 +54,7 @@ export class Detail extends Component<DetailProps> {
 
   render() {
     let {
-      mail: { content, title, time, from }
+      mail: { content }
     } = this.props;
 
     return (
@@ -74,9 +74,9 @@ export class Detail extends Component<DetailProps> {
         >
           <Skeleton loading={this.loading} avatar active>
             <Meta
-              avatar={<Avatar src={from} />}
-              title={title}
-              description={time}
+              avatar={<Avatar src={"from"} />}
+              title={"title"}
+              description={"time"}
             />
           </Skeleton>
           <Content>{content}</Content>
