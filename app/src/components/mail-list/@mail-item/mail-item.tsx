@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import styled from "styled-components";
 import { Checkbox, Icon as _Icon, List } from "antd";
-// import { Mail } from "shared";
+import { Mail } from "../../../models";
+import { ServicesProps } from "../../../service-entrances";
+import { RouteComponentProps, withRouter } from "react-router";
 
 const Icon = styled(_Icon)`
   display: flex;
@@ -77,21 +79,28 @@ const Wrapper = styled(List.Item)`
   }
 `;
 
-interface MailItemProps {
-  mail: any;
+interface MailItemProps extends ServicesProps, RouteComponentProps {
+  mail: Mail;
 }
 
+@inject("mailService")
 @observer
-export class MailItem extends Component<MailItemProps> {
+export class _MailItem extends Component<MailItemProps> {
+  private mailService = this.props.mailService!;
+
   render() {
+    let {
+      mail: { subject, content }
+    } = this.props;
+
     return (
-      <Wrapper>
+      <Wrapper onClick={this.onItemClick}>
         <Checkbox />
         <Icon type="star" title="星标" />
         <Icon type="tag" title="标记" />
-        <Title>邮件标题</Title>
+        <Title>{subject}</Title>
         <Content>
-          <Text>这是一封模拟的邮件内容</Text>
+          <Text>{content}</Text>
           <Menu>
             <Icon type="delete" />
           </Menu>
@@ -100,4 +109,14 @@ export class MailItem extends Component<MailItemProps> {
       </Wrapper>
     );
   }
+
+  private onItemClick = (): void => {
+    let { mail, history } = this.props;
+
+    this.mailService.setDetail(mail);
+
+    history.push("detail");
+  };
 }
+
+export const MailItem = withRouter(_MailItem);

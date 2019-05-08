@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Header } from "./@header";
 import { List as _List } from "antd";
 import { MailItem } from "./@mail-item";
+import { Mail } from "../../models";
 
 const Wrapper = styled.div`
   height: 100%;
@@ -19,12 +20,14 @@ const Footer = styled.div`
 `;
 
 interface MailListProps {
-  mails: any[];
+  mails: Mail[];
 }
 
 @observer
 export class MailList extends Component<MailListProps> {
   render() {
+    let { mails } = this.props;
+
     return (
       <Wrapper>
         <Header
@@ -35,8 +38,8 @@ export class MailList extends Component<MailListProps> {
         />
         <List
           footer={<Footer>最近登录 00点19分</Footer>}
-          dataSource={Array(30)}
-          renderItem={(item: any) => <MailItem mail={item} />}
+          dataSource={mails}
+          renderItem={(item: Mail) => <MailItem mail={item} />}
         />
       </Wrapper>
     );

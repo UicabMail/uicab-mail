@@ -1,5 +1,9 @@
 export interface Mail {
-  to: string[];
+  from: string;
+  fromName: string;
+  to: string;
   subject: string;
   content: string;
+  time: string;
+  seen: boolean;
 }

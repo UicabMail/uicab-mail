@@ -108,8 +108,6 @@ class _Compose extends Component<ComposeProps> {
         return;
       }
 
-      values.to = values.to.split(";");
-
       this.mailService.send(values as Mail);
 
       runInAction(() => (this.sending = true));

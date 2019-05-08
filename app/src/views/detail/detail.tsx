@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import styled from "styled-components";
 import { Mail } from "../../models/mail";
 import { Card, Icon, Skeleton, Avatar } from "antd";
 import { Meta } from "antd/lib/list/Item";
-import { observable, runInAction } from "mobx";
+import { observable, runInAction, computed } from "mobx";
 import { IconFont as _IconFont } from "../../components";
+import { ServicesProps } from "../../service-entrances";
 
 const Wrapper = styled.div`
   box-sizing: border-box;
@@ -37,12 +38,18 @@ const Content = styled.div`
   padding: 24px;
 `;
 
-interface DetailProps {
-  mail: Mail;
-}
+interface DetailProps extends ServicesProps {}
 
+@inject("mailService")
 @observer
 export class Detail extends Component<DetailProps> {
+  private mailService = this.props.mailService!;
+
+  @computed
+  private get mail(): Mail | undefined {
+    return this.mailService.detail;
+  }
+
   @observable
   private loading = true;
 
@@ -53,9 +60,13 @@ export class Detail extends Component<DetailProps> {
   }
 
   render() {
-    let {
-      mail: { content }
-    } = this.props;
+    let mail = this.mail;
+
+    if (!mail) {
+      return "请选择邮件";
+    }
+
+    let { subject, content, time } = mail;
 
     return (
       <Wrapper>
@@ -75,8 +86,8 @@ export class Detail extends Component<DetailProps> {
           <Skeleton loading={this.loading} avatar active>
             <Meta
               avatar={<Avatar src={"from"} />}
-              title={"title"}
-              description={"time"}
+              title={subject}
+              description={time}
             />
           </Skeleton>
           <Content>{content}</Content>
@@ -85,14 +96,7 @@ export class Detail extends Component<DetailProps> {
     );
   }
 
-  private onReplyClick = (): void => {
-    //   let { mail, mailService } = this.props;
-    //   this.mailService.reply(mail);
-    // };
-    // private onForwardClick = (): void => {
-    //   let { mail, mailService } = this.props;
-    //   this.mailService.forward(mail);
-  };
+  private onReplyClick = (): void => {};
 
   private onForwardClick = (): void => {};
 }
