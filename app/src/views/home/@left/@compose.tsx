@@ -89,11 +89,20 @@ class _Compose extends Component<ComposeProps> {
     this.mailService.on("SEND", this.onMailSended);
   }
 
+  componentWillUnmount(): void {
+    this.mailService.off("SEND", this.onMailSended);
+  }
+
   @action
   private onMailSended = (sended: boolean): void => {
-    sended
-      ? message.success("邮件发送成功")
-      : message.warning("邮件发送失败，请重试");
+    let { form } = this.props;
+
+    if (sended) {
+      message.success("邮件发送成功");
+      form.resetFields();
+    } else {
+      message.warning("邮件发送失败，请重试");
+    }
 
     this.sending = false;
   };
@@ -115,7 +124,12 @@ class _Compose extends Component<ComposeProps> {
   };
 
   private onEditButtonClick = (): void => {
-    let { history, onClose } = this.props;
+    let { form, history, onClose } = this.props;
+
+    let values = form.getFieldsValue();
+
+    this.mailService.setEditing(values as Mail);
+
     history.push("edit");
     onClose();
   };

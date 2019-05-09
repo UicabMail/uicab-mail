@@ -7,6 +7,7 @@ import { Meta } from "antd/lib/list/Item";
 import { observable, runInAction, computed } from "mobx";
 import { IconFont as _IconFont } from "../../components";
 import { ServicesProps } from "../../service-entrances";
+import "braft-editor/dist/output.css";
 
 const Wrapper = styled.div`
   box-sizing: border-box;
@@ -66,7 +67,7 @@ export class Detail extends Component<DetailProps> {
       return "请选择邮件";
     }
 
-    let { subject, content, time } = mail;
+    let { subject, content, time, contentType } = mail;
 
     return (
       <Wrapper>
@@ -90,7 +91,15 @@ export class Detail extends Component<DetailProps> {
               description={time}
             />
           </Skeleton>
-          <Content>{content}</Content>
+
+          {contentType.startsWith("text/plain") ? (
+            <Content>{content}</Content>
+          ) : (
+            <Content
+              className="braft-output-content"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          )}
         </Card>
       </Wrapper>
     );

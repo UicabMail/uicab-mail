@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { observer } from "mobx-react";
 import styled from "styled-components";
-import { observable } from "mobx";
 import BraftEditor from "braft-editor";
 import "braft-editor/dist/index.css";
 
@@ -11,25 +10,34 @@ const Wrapper = styled.div`
   border: 1px solid #ccc;
 `;
 
-interface MailEditorProps {}
+interface MailEditorProps {
+  initContent?: string;
+}
 
 @observer
 export class MailEditor extends Component<MailEditorProps> {
-  @observable
-  private editorState = BraftEditor.createEditorState(null);
+  private editorInstance: BraftEditor | undefined;
 
   render() {
+    let { initContent } = this.props;
+
     return (
       <Wrapper>
         <BraftEditor
-          value={this.editorState}
-          onChange={this.onChange}
-          onSave={this.onSave}
+          ref={instance =>
+            (this.editorInstance = instance ? instance : undefined)
+          }
+          defaultValue={BraftEditor.createEditorState(initContent)}
         />
       </Wrapper>
     );
   }
 
-  private onChange = (): void => {};
-  private onSave = (): void => {};
+  getValue = (): string | undefined => {
+    if (!this.editorInstance) {
+      return undefined;
+    }
+
+    return this.editorInstance.getValue().toHTML();
+  };
 }

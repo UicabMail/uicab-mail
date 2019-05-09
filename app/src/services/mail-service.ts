@@ -9,6 +9,9 @@ export class MailService {
   @observable
   detail: Mail | undefined;
 
+  @observable
+  editing: Mail | undefined;
+
   @computed
   private get socket(): SocketIOClient.Socket {
     return this.socketService.socket;
@@ -26,8 +29,8 @@ export class MailService {
 
   private onReceiveMail = (): void => {};
 
-  send = (mail: Mail, otherReceive = []): void => {
-    this.socket.emit(eventType.SEND, mail, [mail.to, ...otherReceive]);
+  send = (mail: Mail, isHTML = false, otherReceive = []): void => {
+    this.socket.emit(eventType.SEND, mail, [mail.to, ...otherReceive], isHTML);
   };
 
   receive = (folder: string, page: number): void => {
@@ -38,12 +41,17 @@ export class MailService {
     this.socket.on(eventType[type], event);
   }
 
-  off(type: MailEventType, event: () => void): void {
+  off(type: MailEventType, event: (...arg: any) => void): void {
     this.socket.off(eventType[type], event);
   }
 
   @action
-  setDetail(mail: Mail): void {
+  setDetail(mail: Mail | undefined): void {
     this.detail = mail;
+  }
+
+  @action
+  setEditing(mail: Mail | undefined): void {
+    this.editing = mail;
   }
 }

@@ -42,7 +42,7 @@ const TAB_ITEMS: ItemData[] = [
   {
     icon: "icon-send",
     text: "已发邮件",
-    path: ""
+    path: "sent"
   },
   {
     icon: "icon-draft",

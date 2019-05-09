@@ -3,6 +3,7 @@ export interface Mail {
   fromName: string;
   to: string;
   subject: string;
+  contentType: string;
   content: string;
   time: string;
   seen: boolean;
