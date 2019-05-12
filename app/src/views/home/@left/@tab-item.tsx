@@ -6,6 +6,11 @@ import classNames from "classnames";
 
 import { IconFont as _Icon } from "../../../components";
 
+const Icon = styled(_Icon)`
+  color: #ccc;
+  font-size: 18px;
+`;
+
 const Wrapper = styled.div`
   height: 36px;
   display: flex;
@@ -13,23 +18,25 @@ const Wrapper = styled.div`
   padding: 0 10px 0 24px;
   cursor: pointer;
   font-size: 14px;
+  color: #666;
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.05);
+    text-decoration: none;
   }
 
   &.active {
     font-weight: bold;
     color: rgba(93, 179, 255);
     background-color: rgba(230, 247, 255);
+
+    ${Icon} {
+      color: rgba(93, 179, 255);
+    }
   }
 `;
 
 const Badge = styled(_Badge)``;
-
-const Icon = styled(_Icon)`
-  font-size: 18px;
-`;
 
 const ItemText = styled.div`
   flex: 1;

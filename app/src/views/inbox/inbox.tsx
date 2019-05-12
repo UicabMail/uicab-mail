@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { MailList } from "../../components/mail-list";
 import { ServicesProps } from "../../service-entrances";
 import { Mail } from "../../models";
-import { observable, action } from "mobx";
+import { observable, action, runInAction } from "mobx";
 
 const Wrapper = styled.div`
   height: 100%;
@@ -31,10 +31,15 @@ export class Inbox extends Component<InboxProps> {
   componentDidMount(): void {
     this.mailService.receive("INBOX", 1);
     this.mailService.on("RECEIVED", this.onReceiveMails);
+
+    runInAction(() => {
+      this.mails = this.mailService.inbox;
+    });
   }
 
   @action
   private onReceiveMails = (mails: Mail[]): void => {
     this.mails = mails;
+    this.mailService.setInbox(mails);
   };
 }

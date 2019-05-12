@@ -8,6 +8,7 @@ import { observable, runInAction, computed } from "mobx";
 import { IconFont as _IconFont } from "../../components";
 import { ServicesProps } from "../../service-entrances";
 import "braft-editor/dist/output.css";
+import { RouteComponentProps } from "react-router-dom";
 
 const Wrapper = styled.div`
   box-sizing: border-box;
@@ -39,7 +40,7 @@ const Content = styled.div`
   padding: 24px;
 `;
 
-interface DetailProps extends ServicesProps {}
+interface DetailProps extends ServicesProps, RouteComponentProps {}
 
 @inject("mailService")
 @observer
@@ -73,12 +74,12 @@ export class Detail extends Component<DetailProps> {
       <Wrapper>
         <Card
           actions={[
-            <ActionWrapper>
-              <IconFont type="icon-reply" onClick={this.onReplyClick} />
+            <ActionWrapper onClick={this.onReplyClick}>
+              <IconFont type="icon-reply" />
               回复
             </ActionWrapper>,
-            <ActionWrapper>
-              <IconFont type="icon-forward" onClick={this.onForwardClick} />
+            <ActionWrapper onClick={this.onForwardClick}>
+              <IconFont type="icon-forward" />
               转发
             </ActionWrapper>,
             <Icon type="ellipsis" />
@@ -105,7 +106,28 @@ export class Detail extends Component<DetailProps> {
     );
   }
 
-  private onReplyClick = (): void => {};
+  private onReplyClick = (): void => {
+    let { history } = this.props;
+    let { fromName, from } = this.mail!;
 
-  private onForwardClick = (): void => {};
+    this.mailService.setEditing({
+      to: from,
+      subject: `回复：${fromName || from}`
+    } as Mail);
+
+    history.push("edit");
+  };
+
+  private onForwardClick = (): void => {
+    let { history } = this.props;
+
+    this.mailService.setEditing({
+      ...this.mail!,
+      to: ""
+    } as Mail);
+
+    history.push("edit");
+  };
 }
+
+// export const Compose = withRouter(_Compose);

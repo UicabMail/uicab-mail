@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, MouseEvent } from "react";
 import { observer, inject } from "mobx-react";
 import styled from "styled-components";
 import { Checkbox, Icon as _Icon, List } from "antd";
@@ -53,6 +53,10 @@ const Wrapper = styled(List.Item)`
   align-items: center;
   cursor: pointer;
 
+  &.unread {
+    font-weight: 900;
+  }
+
   & > :first-child {
     margin-left: 2%;
   }
@@ -90,25 +94,31 @@ export class _MailItem extends Component<MailItemProps> {
 
   render() {
     let {
-      mail: { subject, content }
+      mail: { subject, time, seen, from, fromName }
     } = this.props;
 
+    // content = contentType.startsWith("text") ? content : "点击查看邮件详情...";
+
     return (
-      <Wrapper onClick={this.onItemClick}>
+      <Wrapper onClick={this.onItemClick} className={seen ? "" : "unread"}>
         <Checkbox />
-        <Icon type="star" title="星标" />
-        <Icon type="tag" title="标记" />
-        <Title>{subject}</Title>
+        <Icon type="star" title="星标" onClick={this.onStarClick} />
+        {/* <Icon type="tag" title="标记" /> */}
+        <Title>{fromName || from}</Title>
         <Content>
-          <Text>{content}</Text>
+          <Text>{subject}</Text>
           <Menu>
             <Icon type="delete" />
           </Menu>
-          <Date>23点41分</Date>
+          <Date>{time}</Date>
         </Content>
       </Wrapper>
     );
   }
+
+  private onStarClick = (event: MouseEvent<HTMLElement>): void => {
+    event.stopPropagation();
+  };
 
   private onItemClick = (): void => {
     let { mail, history } = this.props;

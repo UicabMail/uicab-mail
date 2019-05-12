@@ -3,10 +3,11 @@ import { observer, inject } from "mobx-react";
 import styled from "styled-components";
 import { Mail } from "../../models/mail";
 import { MailEditor } from "../../components";
-import { Form, Input, Button, Spin, message } from "antd";
+import { Form, Input, Button, Spin } from "antd";
 import { ServicesProps } from "../../service-entrances";
 import { FormComponentProps } from "antd/lib/form";
 import { computed, observable, runInAction, action } from "mobx";
+import { RouteComponentProps } from "react-router-dom";
 
 const Wrapper = styled.div`
   position: relative;
@@ -24,6 +25,8 @@ const Content = styled.div`
 
 const SendWrapper = styled.div`
   position: absolute;
+  display: flex;
+  flex-direction: column;
   top: 10%;
   right: 8%;
 
@@ -31,10 +34,14 @@ const SendWrapper = styled.div`
     width: 54px;
     height: 54px;
     font-size: 32px;
+    margin-bottom: 12px;
   }
 `;
 
-interface EditProps extends ServicesProps, FormComponentProps {
+interface EditProps
+  extends ServicesProps,
+    FormComponentProps,
+    RouteComponentProps {
   mail: Mail;
 }
 
@@ -95,6 +102,13 @@ export class _Edit extends Component<EditProps> {
                 icon="twitter"
                 htmlType="submit"
               />
+
+              <Button
+                type="dashed"
+                shape="circle"
+                icon="edit"
+                onClick={this.saveDraft}
+              />
             </SendWrapper>
           </Spin>
         </Form>
@@ -115,13 +129,26 @@ export class _Edit extends Component<EditProps> {
     let { form } = this.props;
 
     if (sended) {
-      message.success("邮件发送成功");
       form.resetFields();
-    } else {
-      message.warning("邮件发送失败，请重试");
     }
 
     this.sending = false;
+  };
+
+  private saveDraft = (): void => {
+    let { form, history } = this.props;
+
+    let values = form.getFieldsValue() as Mail;
+
+    values.content = this.editor.getValue() || "";
+
+    values.contentType = "html";
+
+    values.seen = true;
+
+    this.mailService.saveDraft(values);
+
+    history.push("draft");
   };
 
   private onSubmit = (event: FormEvent): void => {

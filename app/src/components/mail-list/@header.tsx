@@ -64,7 +64,7 @@ export class Header extends Component<HeaderProps> {
         </Menu>
 
         <PageInfoWrapper>
-          <PageInfo>第 1 页 / 共 20 页</PageInfo>
+          <PageInfo>第 1 页 / 共 1 页</PageInfo>
           <Icon type="left" />
           <Icon type="right" />
         </PageInfoWrapper>

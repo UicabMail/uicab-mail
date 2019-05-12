@@ -6,7 +6,7 @@ import { Button } from "antd";
 import { Contact } from "./@contact";
 import { Compose } from "./@compose";
 import { observable, action } from "mobx";
-import { Link } from "react-router-dom";
+import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 280px;
@@ -37,7 +37,7 @@ const TAB_ITEMS: ItemData[] = [
   {
     icon: "icon-favorite",
     text: "已加星标",
-    path: ""
+    path: "star"
   },
   {
     icon: "icon-send",
@@ -47,7 +47,7 @@ const TAB_ITEMS: ItemData[] = [
   {
     icon: "icon-draft",
     text: "草稿",
-    path: ""
+    path: "draft"
   }
 ];
 
@@ -57,12 +57,15 @@ interface ItemData {
   path: string;
 }
 
-interface LeftProps {}
+interface LeftProps extends RouteComponentProps {}
 
 @observer
-export class Left extends Component<LeftProps> {
+export class _Left extends Component<LeftProps> {
   @observable
   private visible = false;
+
+  @observable
+  private active: number | undefined;
 
   render() {
     return (
@@ -85,12 +88,31 @@ export class Left extends Component<LeftProps> {
     );
   }
 
+  componentDidMount(): void {
+    this.updateActive();
+  }
+
+  componentDidUpdate(): void {
+    this.updateActive();
+  }
+
   private renderTabs(): ReactNode {
     return TAB_ITEMS.map(({ path, icon, text }, index) => (
       <Link to={path} key={index}>
-        <TabItem icon={icon} text={text} active={index === 0} />
+        <TabItem icon={icon} text={text} active={index === this.active} />
       </Link>
     ));
+  }
+
+  @action
+  private updateActive(): void {
+    let {
+      history: {
+        location: { pathname }
+      }
+    } = this.props;
+
+    this.active = TAB_ITEMS.findIndex(item => pathname.includes(item.path));
   }
 
   @action
@@ -98,3 +120,5 @@ export class Left extends Component<LeftProps> {
     this.visible = !this.visible;
   };
 }
+
+export const Left = withRouter(_Left);

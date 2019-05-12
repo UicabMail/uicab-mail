@@ -15,7 +15,7 @@ export const userService = new UserService(socketService, localDBService);
 
 export const departmentService = new DepartmentService(socketService);
 
-export const mailService = new MailService(socketService);
+export const mailService = new MailService(socketService, localDBService);
 
 export const messageService = new MessageService(socketService, localDBService);
 
