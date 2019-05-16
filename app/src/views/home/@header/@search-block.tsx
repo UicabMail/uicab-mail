@@ -1,9 +1,11 @@
 import React, { Component, ReactNode, FormEvent, createRef } from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import styled from "styled-components";
 import { observable, action } from "mobx";
 import classNames from "classnames";
 import { Icon as _Icon, Tooltip } from "antd";
+import { ServicesProps } from "../../../service-entrances";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -57,10 +59,11 @@ const SearchInput = styled.input`
   font-size: 16px;
 `;
 
-interface SearchBlockProps {}
+interface SearchBlockProps extends ServicesProps, RouteComponentProps {}
 
+@inject("mailService")
 @observer
-export class SearchBlock extends Component<SearchBlockProps> {
+export class _SearchBlock extends Component<SearchBlockProps> {
   @observable
   private searchFocus = false;
 
@@ -110,7 +113,19 @@ export class SearchBlock extends Component<SearchBlockProps> {
   }
 
   private onChange = ({ currentTarget }: FormEvent<HTMLInputElement>): void => {
-    this.setSearchText(currentTarget.value.trim());
+    let keyword = currentTarget.value.trim();
+
+    this.setSearchText(keyword);
+
+    if (!keyword) {
+      return;
+    }
+
+    let { mailService, history } = this.props;
+
+    mailService!.setKeyword(keyword);
+
+    history.push("search", { keyword });
   };
 
   private onFocus = (): void => {
@@ -126,3 +141,5 @@ export class SearchBlock extends Component<SearchBlockProps> {
     this.searchInput.current!.focus();
   };
 }
+
+export const SearchBlock = withRouter(_SearchBlock);

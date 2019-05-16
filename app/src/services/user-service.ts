@@ -4,6 +4,7 @@ import { User } from "../models/user";
 import { computed, observable, action } from "mobx";
 import { LocalDBService } from "./local-db-service";
 import { isAfter } from "date-fns";
+import { message } from "antd";
 
 export type UserEventType = keyof Pick<
   EventType,
@@ -84,11 +85,11 @@ export class UserService {
 
         this.localDBService.set<User>("user", user);
       } else {
-        console.log("登录已失效");
+        message.error("登录已失效");
         this.localDBService.unset("user");
       }
     } else {
-      console.log("用户名或密码错误");
+      message.error("用户名或密码错误");
     }
   };
 

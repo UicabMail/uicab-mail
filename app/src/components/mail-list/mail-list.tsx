@@ -37,7 +37,12 @@ export class MailList extends Component<MailListProps> {
           onReload={this.onReload}
         />
         <List
-          footer={<Footer>最近登录 00点19分</Footer>}
+          footer={
+            <Footer>
+              {/* 最近登录 00点19分 */}
+              欢迎回来~
+            </Footer>
+          }
           dataSource={mails}
           renderItem={(item: Mail) => <MailItem mail={item} />}
         />

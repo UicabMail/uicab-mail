@@ -52,11 +52,22 @@ export class Menu extends Component<MenuProps> {
           <MenuIcon type="logout" onClick={this.onLoginOutClick} />
         </Tooltip>
 
-        <AvatarWrapper to="/profile">
-          <Avatar style={{ backgroundColor: "#009960" }} size={32}>
-            B
-          </Avatar>
-        </AvatarWrapper>
+        <Tooltip
+          placement="bottomRight"
+          title="个人中心"
+          mouseEnterDelay={0.5}
+          arrowPointAtCenter={true}
+        >
+          <AvatarWrapper to="/profile">
+            <Avatar
+              style={{ backgroundColor: "#009960" }}
+              size={32}
+              src="https://avatars0.githubusercontent.com/u/33797740?s=460&v=4"
+            >
+              B
+            </Avatar>
+          </AvatarWrapper>
+        </Tooltip>
       </Wrapper>
     );
   }

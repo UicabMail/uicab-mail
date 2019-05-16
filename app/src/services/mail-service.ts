@@ -10,6 +10,9 @@ export type MailEventType = keyof Pick<EventType, "SEND" | "RECEIVED">;
 
 export class MailService {
   @observable
+  keyword = "";
+
+  @observable
   detail: Mail | undefined;
 
   @observable
@@ -17,6 +20,17 @@ export class MailService {
 
   @observable
   inbox: Mail[] = [];
+
+  @computed
+  get search(): Mail[] {
+    return this.inbox.filter(
+      ({ from, fromName, subject, content }) =>
+        subject.includes(this.keyword) ||
+        content.includes(this.keyword) ||
+        from.includes(this.keyword) ||
+        (fromName && fromName.includes(this.keyword))
+    );
+  }
 
   @computed
   get work(): Mail[] {
@@ -73,6 +87,11 @@ export class MailService {
   getDraft = (): Mail[] => {
     return this.localDBService.get<Mail[]>(DRAFT_MAIL_KEY) || [];
   };
+
+  @action
+  setKeyword(keyword: string): void {
+    this.keyword = keyword;
+  }
 
   @action
   setDetail(mail: Mail | undefined): void {

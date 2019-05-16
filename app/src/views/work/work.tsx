@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { MailList } from "../../components/mail-list";
 import { ServicesProps } from "../../service-entrances";
 import { Mail } from "../../models";
-import { observable, runInAction } from "mobx";
+import { computed } from "mobx";
 
 const Wrapper = styled.div`
   height: 100%;
@@ -17,8 +17,10 @@ interface WorkProps extends ServicesProps {}
 export class Work extends Component<WorkProps> {
   private mailService = this.props.mailService!;
 
-  @observable
-  private mails: Mail[] = [];
+  @computed
+  private get mails(): Mail[] {
+    return this.mailService!.work;
+  }
 
   render() {
     return (
@@ -28,9 +30,5 @@ export class Work extends Component<WorkProps> {
     );
   }
 
-  componentDidMount(): void {
-    runInAction(() => {
-      this.mails = this.mailService.work;
-    });
-  }
+  componentDidMount(): void {}
 }

@@ -39,6 +39,10 @@ export class Inbox extends Component<InboxProps> {
 
   @action
   private onReceiveMails = (mails: Mail[]): void => {
+    if (!mails) {
+      mails = [];
+    }
+
     this.mails = mails;
     this.mailService.setInbox(mails);
   };
